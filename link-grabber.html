@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Link Grabber</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#165DFF',
+                        secondary: '#36D399',
+                        danger: '#F87272',
+                        dark: '#1E293B',
+                        light: '#F8FAFC'
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .gradient-bg {
+                background: linear-gradient(135deg, #165DFF 0%, #36D399 100%);
+            }
+            .text-shadow {
+                text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            }
+            .card-hover {
+                transition: all 0.3s ease;
+            }
+            .card-hover:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-gray-50 font-inter text-dark">
+    <!-- 顶部导航栏 -->
+    <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md shadow-sm">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <div class="gradient-bg text-white p-2 rounded-lg">
+                    <i class="fa fa-link text-xl"></i>
+                </div>
+                <h1 class="text-xl font-bold text-dark">Link Grabber</h1>
+            </div>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#" class="text-gray-600 hover:text-primary transition-colors duration-200">Home</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-primary transition-colors duration-200">Features</a></li>
+                    <li><a href="#" class="text-gray-600 hover:text-primary transition-colors duration-200">About</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 py-12">
+        <!-- 英雄区域 -->
+        <section class="text-center mb-16">
+            <h2 class="text-[clamp(2rem,5vw,3.5rem)] font-bold mb-4 text-dark text-shadow">
+                Extract Links from Any Website
+            </h2>
+            <p class="text-gray-600 text-lg max-w-3xl mx-auto mb-8">
+                Link Grabber helps you quickly and easily extract all links from any web page. Perfect for web developers, researchers, and content creators.
+            </p>
+            <div class="flex justify-center">
+                <a href="#grabber" class="gradient-bg text-white px-8 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center">
+                    <i class="fa fa-magic mr-2"></i> Try it now
+                </a>
+            </div>
+        </section>
+
+        <!-- 功能介绍 -->
+        <section class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+            <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                <div class="gradient-bg text-white p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                    <i class="fa fa-bolt"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Fast Extraction</h3>
+                <p class="text-gray-600">Quickly scans web pages and retrieves all links in seconds.</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                <div class="gradient-bg text-white p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                    <i class="fa fa-filter"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Advanced Filtering</h3>
+                <p class="text-gray-600">Filter links by domain, type, and other criteria.</p>
+            </div>
+            <div class="bg-white rounded-xl p-6 shadow-md card-hover">
+                <div class="gradient-bg text-white p-3 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
+                    <i class="fa fa-download"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2">Export Options</h3>
+                <p class="text-gray-600">Download extracted links in various formats for further use.</p>
+            </div>
+        </section>
+
+        <!-- 主要功能区 -->
+        <section id="grabber" class="bg-white rounded-2xl shadow-xl p-8 max-w-4xl mx-auto mb-16">
+            <h3 class="text-2xl font-bold mb-6 text-center">Enter Website URL</h3>
+            
+            <!-- URL输入区域 -->
+            <div class="mb-8">
+                <div class="relative">
+                    <input 
+                        type="url" 
+                        id="url-input" 
+                        placeholder="https://example.com" 
+                        class="w-full pl-12 pr-4 py-4 rounded-lg border border-gray-300 focus:ring-2 focus:ring-primary focus:border-primary transition-all outline-none text-lg"
+                    >
+                    <div class="absolute left-4 top-1/2 transform -translate-y-1/2 text-gray-400">
+                        <i class="fa fa-globe"></i>
+                    </div>
+                </div>
+                <div class="flex justify-between mt-2 text-sm text-gray-500">
+                    <span>Supports all valid URLs</span>
+                    <span id="error-message" class="text-danger hidden">Please enter a valid URL</span>
+                </div>
+            </div>
+            
+            <!-- 选项区域 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Link Type</label>
+                    <div class="flex items-center space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="link-type" value="all" checked class="form-radio text-primary h-5 w-5">
+                            <span class="ml-2">All Links</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="link-type" value="internal" class="form-radio text-primary h-5 w-5">
+                            <span class="ml-2">Internal</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="radio" name="link-type" value="external" class="form-radio text-primary h-5 w-5">
+                            <span class="ml-2">External</span>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700 mb-1">Include Resources</label>
+                    <div class="flex items-center space-x-4">
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="include-images" class="form-checkbox text-primary h-5 w-5">
+                            <span class="ml-2">Images</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="include-stylesheets" class="form-checkbox text-primary h-5 w-5">
+                            <span class="ml-2">Stylesheets</span>
+                        </label>
+                        <label class="inline-flex items-center">
+                            <input type="checkbox" id="include-scripts" class="form-checkbox text-primary h-5 w-5">
+                            <span class="ml-2">Scripts</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 抓取按钮 -->
+            <div class="flex justify-center mb-8">
+                <button 
+                    id="grab-button" 
+                    class="gradient-bg text-white px-10 py-3 rounded-lg font-medium shadow-lg hover:shadow-xl transition-all duration-300 flex items-center disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                    <i class="fa fa-link mr-2"></i> Grab Links
+                </button>
+            </div>
+            
+            <!-- 结果区域 -->
+            <div id="results-container" class="hidden">
+                <div class="flex justify-between items-center mb-4">
+                    <h4 class="text-xl font-semibold">Results</h4>
+                    <div class="flex space-x-2">
+                        <div class="text-sm bg-gray-100 px-3 py-1 rounded-full">
+                            <span id="total-links">0</span> Links
+                        </div>
+                        <button id="copy-button" class="text-primary hover:text-primary/80 transition-colors flex items-center">
+                            <i class="fa fa-copy mr-1"></i> Copy
+                        </button>
+                        <button id="download-button" class="text-primary hover:text-primary/80 transition-colors flex items-center">
+                            <i class="fa fa-download mr-1"></i> Download
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- 链接列表 -->
+                <div class="overflow-x-auto bg-gray-50 rounded-lg max-h-[400px]">
+                    <table class="min-w-full divide-y divide-gray-200">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">URL</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="links-table-body" class="bg-white divide-y divide-gray-200">
+                            <!-- 结果将通过JavaScript动态添加 -->
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- 没有结果时显示 -->
+                <div id="no-results" class="hidden py-12 text-center">
+                    <div class="text-gray-400 mb-3">
+                        <i class="fa fa-search fa-4x"></i>
+                    </div>
+                    <p class="text-gray-500">No links found. Try a different URL or adjust your filters.</p>
+                </div>
+            </div>
+            
+            <!-- 加载指示器 -->
+            <div id="loading-indicator" class="hidden py-12 text-center">
+                <div class="inline-block animate-spin rounded-full h-12 w-12 border-4 border-primary border-t-transparent mb-4"></div>
+                <p class="text-gray-500">Grabbing links from the web page...</p>
+            </div>
+        </section>
+
+        <!-- 特性展示 -->
+        <section class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+                <h3 class="text-3xl font-bold mb-4">Powerful Link Analysis</h3>
+                <p class="text-gray-600 mb-6">Our tool doesn't just grab links - it analyzes them. Get detailed information about each link including status codes, types, and more.</p>
+                <ul class="space-y-3">
+                    <li class="flex items-start">
+                        <div class="text-secondary mt-1 mr-3">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <span>Check for broken links with status code analysis</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="text-secondary mt-1 mr-3">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <span>Filter and sort links by various criteria</span>
+                    </li>
+                    <li class="flex items-start">
+                        <div class="text-secondary mt-1 mr-3">
+                            <i class="fa fa-check-circle"></i>
+                        </div>
+                        <span>Export results for further analysis</span>
+                    </li>
+                </ul>
+            </div>
+            <div class="bg-white p-6 rounded-xl shadow-lg">
+                <img src="https://picsum.photos/seed/linkgrabber/600/400" alt="Link analysis dashboard" class="rounded-lg w-full">
+            </div>
+        </section>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="bg-dark text-white py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <div class="bg-white/10 p-2 rounded-lg">
+                            <i class="fa fa-link text-xl"></i>
+                        </div>
+                        <h3 class="text-xl font-bold">Link Grabber</h3>
+                    </div>
+                    <p class="text-gray-400">A powerful tool for extracting and analyzing links from any web page.</p>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Home</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Features</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">About</a></li>
+                        <li><a href="#" class="text-gray-400 hover:text-white transition-colors duration-200">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4 class="text-lg font-semibold mb-4">Connect With Us</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="bg-white/10 hover:bg-white/20 transition-colors duration-200 w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="bg-white/10 hover:bg-white/20 transition-colors duration-200 w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fa fa-github"></i>
+                        </a>
+                        <a href="#" class="bg-white/10 hover:bg-white/20 transition-colors duration-200 w-10 h-10 rounded-full flex items-center justify-center">
+                            <i class="fa fa-linkedin"></i>
+                        </a>
+                    </div>
+                    <p class="text-gray-400 mt-4">Have questions? Email us at <a href="mailto:support@linkgrabber.com" class="text-white hover:underline">support@linkgrabber.com</a></p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-500">
+                <p>&copy; 2025 Link Grabber. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const urlInput = document.getElementById('url-input');
+            const grabButton = document.getElementById('grab-button');
+            const resultsContainer = document.getElementById('results-container');
+            const linksTableBody = document.getElementById('links-table-body');
+            const loadingIndicator = document.getElementById('loading-indicator');
+            const errorMessage = document.getElementById('error-message');
+            const totalLinks = document.getElementById('total-links');
+            const noResults = document.getElementById('no-results');
+            const copyButton = document.getElementById('copy-button');
+            const downloadButton = document.getElementById('download-button');
+            
+            // 按钮点击事件
+            grabButton.addEventListener('click', function() {
+                const url = urlInput.value.trim();
+                
+                // 验证URL
+                if (!url) {
+                    showError('Please enter a URL');
+                    return;
+                }
+                
+                if (!isValidUrl(url)) {
+                    showError('Please enter a valid URL');
+                    return;
+                }
+                
+                hideError();
+                
+                // 显示加载状态
+                loadingIndicator.classList.remove('hidden');
+                resultsContainer.classList.add('hidden');
+                grabButton.disabled = true;
+                
+                // 模拟抓取链接（实际应用中这里应该是API调用）
+                setTimeout(() => {
+                    // 隐藏加载状态
+                    loadingIndicator.classList.add('hidden');
+                    resultsContainer.classList.remove('hidden');
+                    grabButton.disabled = false;
+                    
+                    // 生成模拟数据
+                    const links = generateSampleLinks(url);
+                    
+                    // 显示结果
+                    displayLinks(links);
+                }, 1500);
+            });
+            
+            // 复制按钮点击事件
+            copyButton.addEventListener('click', function() {
+                const links = Array.from(document.querySelectorAll('#links-table-body .link-url'))
+                    .map(el => el.textContent);
+                
+                if (links.length) {
+                    navigator.clipboard.writeText(links.join('\n'))
+                        .then(() => {
+                            showNotification('Links copied to clipboard!');
+                        })
+                        .catch(err => {
+                            showNotification('Failed to copy links', 'error');
+                        });
+                }
+            });
+            
+            // 下载按钮点击事件
+            downloadButton.addEventListener('click', function() {
+                const links = Array.from(document.querySelectorAll('#links-table-body .link-url'))
+                    .map(el => el.textContent);
+                
+                if (links.length) {
+                    const text = links.join('\n');
+                    const blob = new Blob([text], { type: 'text/plain' });
+                    const url = URL.createObjectURL(blob);
+                    
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'links.txt';
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                    
+                    showNotification('Links downloaded!');
+                }
+            });
+            
+            // 显示链接结果
+            function displayLinks(links) {
+                // 清空表格
+                linksTableBody.innerHTML = '';
+                
+                if (links.length === 0) {
+                    noResults.classList.remove('hidden');
+                    return;
+                }
+                
+                noResults.classList.add('hidden');
+                
+                // 更新总数
+                totalLinks.textContent = links.length;
+                
+                // 添加链接到表格
+                links.forEach(link => {
+                    const row = document.createElement('tr');
+                    row.className = 'hover:bg-gray-50 transition-colors duration-150';
+                    
+                    row.innerHTML = `
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <div class="flex items-center">
+                                <div class="flex-shrink-0 h-6 w-6 flex items-center justify-center mr-3">
+                                    ${getIconForLink(link)}
+                                </div>
+                                <div class="max-w-xs truncate">
+                                    <a href="${link.url}" target="_blank" class="link-url text-primary hover:underline">${link.url}</a>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getTypeClass(link.type)}">
+                                ${link.type}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(link.status)}">
+                                ${link.status}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <button class="text-primary hover:text-primary/80 transition-colors mr-3" data-url="${link.url}">
+                                <i class="fa fa-external-link"></i> Visit
+                            </button>
+                            <button class="text-gray-500 hover:text-gray-700 transition-colors" data-url="${link.url}">
+                                <i class="fa fa-copy"></i> Copy
+                            </button>
+                        </td>
+                    `;
+                    
+                    linksTableBody.appendChild(row);
+                });
+                
+                // 添加访问和复制按钮事件
+                document.querySelectorAll('#links-table-body button').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const url = this.getAttribute('data-url');
+                        
+                        if (this.innerHTML.includes('Visit')) {
+                            window.open(url, '_blank');
+                        } else {
+                            navigator.clipboard.writeText(url)
+                                .then(() => {
+                                    showNotification('Link copied to clipboard!');
+                                })
+                                .catch(err => {
+                                    showNotification('Failed to copy link', 'error');
+                                });
+                        }
+                    });
+                });
+            }
+            
+            // 显示错误消息
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.remove('hidden');
+                urlInput.classList.add('border-danger');
+                urlInput.classList.remove('focus:border-primary');
+                urlInput.classList.add('focus:border-danger');
+            }
+            
+            // 隐藏错误消息
+            function hideError() {
+                errorMessage.classList.add('hidden');
+                urlInput.classList.remove('border-danger');
+                urlInput.classList.add('focus:border-primary');
+                urlInput.classList.remove('focus:border-danger');
+            }
+            
+            // 验证URL
+            function isValidUrl(url) {
+                try {
+                    new URL(url);
+                    return true;
+                } catch (error) {
+                    return false;
+                }
+            }
+            
+            // 生成模拟链接数据
+            function generateSampleLinks(baseUrl) {
+                const types = ['Internal', 'External', 'Image', 'Stylesheet', 'Script'];
+                const statuses = ['200 OK', '404 Not Found', '301 Moved Permanently', '403 Forbidden'];
+                
+                const links = [];
+                const count = Math.floor(Math.random() * 20) + 10; // 10-29 links
+                
+                for (let i = 0; i < count; i++) {
+                    // 随机确定链接类型
+                    const typeIndex = Math.floor(Math.random() * types.length);
+                    const type = types[typeIndex];
+                    
+                    // 生成URL
+                    let url;
+                    if (type === 'Internal') {
+                        url = `${baseUrl}/${Math.random().toString(36).substring(2, 10)}`;
+                    } else if (type === 'External') {
+                        const domains = ['example.com', 'another-site.net', 'third-party.org', 'test-domain.co.uk'];
+                        const domain = domains[Math.floor(Math.random() * domains.length)];
+                        url = `https://${domain}/${Math.random().toString(36).substring(2, 10)}`;
+                    } else if (type === 'Image') {
+                        url = `https://picsum.photos/seed/${Math.random().toString(36).substring(2, 10)}/200/200`;
+                    } else if (type === 'Stylesheet') {
+                        url = `${baseUrl}/styles/${Math.random().toString(36).substring(2, 10)}.css`;
+                    } else { // Script
+                        url = `${baseUrl}/scripts/${Math.random().toString(36).substring(2, 10)}.js`;
+                    }
+                    
+                    // 随机状态码（大多数为200）
+                    const statusIndex = Math.random() < 0.8 ? 0 : Math.floor(Math.random() * (statuses.length - 1)) + 1;
+                    const status = statuses[statusIndex];
+                    
+                    links.push({ url, type, status });
+                }
+                
+                return links;
+            }
+            
+            // 获取链接类型对应的图标
+            function getIconForLink(link) {
+                switch (link.type) {
+                    case 'Internal':
+                        return '<i class="fa fa-link text-primary"></i>';
+                    case 'External':
+                        return '<i class="fa fa-external-link text-primary"></i>';
+                    case 'Image':
+                        return '<i class="fa fa-image text-secondary"></i>';
+                    case 'Stylesheet':
+                        return '<i class="fa fa-paint-brush text-purple-500"></i>';
+                    case 'Script':
+                        return '<i class="fa fa-code text-yellow-500"></i>';
+                    default:
+                        return '<i class="fa fa-link text-gray-400"></i>';
+                }
+            }
+            
+            // 获取链接类型对应的样式类
+            function getTypeClass(type) {
+                switch (type) {
+                    case 'Internal':
+                        return 'bg-blue-100 text-blue-800';
+                    case 'External':
+                        return 'bg-green-100 text-green-800';
+                    case 'Image':
+                        return 'bg-purple-100 text-purple-800';
+                    case 'Stylesheet':
+                        return 'bg-pink-100 text-pink-800';
+                    case 'Script':
+                        return 'bg-yellow-100 text-yellow-800';
+                    default:
+                        return 'bg-gray-100 text-gray-800';
+                }
+            }
+            
+            // 获取状态码对应的样式类
+            function getStatusClass(status) {
+                if (status.startsWith('2')) {
+                    return 'bg-green-100 text-green-800';
+                } else if (status.startsWith('3')) {
+                    return 'bg-blue-100 text-blue-800';
+                } else if (status.startsWith('4')) {
+                    return 'bg-red-100 text-red-800';
+                } else if (status.startsWith('5')) {
+                    return 'bg-yellow-100 text-yellow-800';
+                } else {
+                    return 'bg-gray-100 text-gray-800';
+                }
+            }
+            
+            // 显示通知
+            function showNotification(message, type = 'success') {
+                // 创建通知元素
+                const notification = document.createElement('div');
+                notification.className = `fixed bottom-4 right-4 px-6 py-3 rounded-lg shadow-lg z-50 transition-all duration-300 transform translate-y-20 opacity-0 ${
+                    type === 'success' ? 'bg-secondary text-white' : 'bg-danger text-white'
+                }`;
+                notification.innerHTML = `
+                    <div class="flex items-center">
+                        <i class="fa ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'} mr-2"></i>
+                        <span>${message}</span>
+                    </div>
+                `;
+                
+                // 添加到页面
+                document.body.appendChild(notification);
+                
+                // 显示通知
+                setTimeout(() => {
+                    notification.classList.remove('translate-y-20', 'opacity-0');
+                }, 10);
+                
+                // 自动关闭
+                setTimeout(() => {
+                    notification.classList.add('translate-y-20', 'opacity-0');
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 3000);
+            }
+            
+            // 添加键盘事件（按下Enter键触发抓取）
+            urlInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    grabButton.click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
+    
